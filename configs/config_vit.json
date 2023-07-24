@@ -1,0 +1,74 @@
+{
+    "model": {
+        "name": "ViT-B-16", 
+        "in_chans": 4, 
+        "image_size": 224, 
+        "num_classes": 28, 
+        "dropout": 0.1, 
+        "out_func": ""
+    },
+    "train":{
+        "epochs": 300, 
+        "internal": 5, 
+        "device": 1, 
+        "optimizer": {
+            "name": "AdamW", 
+            "lr": 4e-3, 
+            "weight_decay": 0.05
+        },
+        "warmup":20,
+        "loss": {
+            "name": "AsymmetricLossOptimized"
+        },
+        "dataloader": {
+            "batch_size": 64, 
+            "shuffle": true,
+            "num_workers": 8
+        },
+        "dataset": {
+            "data_path": "./data", 
+            "split": "train_split", 
+            "num_labels": 28, 
+            "color_info": "./data/HPA/color_info.json", 
+            "transformations": {
+                "random_flip": {
+                    "p": 0.5
+                },
+                "random_rotate": {
+                    "p": 0.05
+                }, 
+                "random_crop": {
+                    "type": "size", 
+                    "size": [224, 224],
+                    "center": false
+                }, 
+                "random_offset": {
+                    "p": 0.1
+                }
+              }, 
+            "input_size": [224, 224]
+        }
+    },
+    "val": {
+        "metric": "F1", 
+        "dataloader": {
+            "batch_size": 64, 
+            "shuffle": false,
+            "num_workers": 8
+        },
+        "dataset": {
+            "data_path": "./data", 
+            "split": "val_split", 
+            "num_labels": 28, 
+            "color_info": "./data/HPA/color_info.json", 
+            "transformations": {
+                "random_crop": {
+                    "type": "size", 
+                    "size": [224, 224],
+                    "center": true
+                }
+            },
+            "input_size": [224, 224]
+        }
+    }
+}
